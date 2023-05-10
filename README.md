@@ -1,4 +1,4 @@
-# firebase_cha
+# firebase_chat
 
 A realtime chat app with firebase
 
