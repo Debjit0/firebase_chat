@@ -1,6 +1,6 @@
-# firebase_chat
+# firebase_cha
 
-A new Flutter project.
+A realtime chat app with firebase
 
 ## Getting Started
 
