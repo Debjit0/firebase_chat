@@ -3,7 +3,6 @@ import 'package:firebase_chat/helper/helperfunctions.dart';
 import 'package:firebase_chat/pages/homepage.dart';
 import 'package:firebase_chat/pages/loginpage.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -39,7 +38,10 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      theme: ThemeData(
+        brightness: Brightness.dark,
+      ),
       debugShowCheckedModeBanner: false,
       home: _isSignedIn ? HomePage() : LoginPage(),
     );

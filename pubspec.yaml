@@ -39,7 +39,6 @@ dependencies:
   firebase_auth: ^4.5.0
   firebase_storage: ^11.1.2
   get: ^4.6.5
-  sharedpreference: ^0.0.1
   shared_preferences: ^2.1.1
 
 dev_dependencies:
