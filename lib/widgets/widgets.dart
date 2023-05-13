@@ -18,3 +18,7 @@ void nextPageOnly({Widget? page, BuildContext? context}) {
   Navigator.pushAndRemoveUntil(
       context!, MaterialPageRoute(builder: (_) => page!), (route) => false);
 }
+
+void showAlert(BuildContext context, String message) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+}

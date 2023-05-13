@@ -41,6 +41,7 @@ dependencies:
   get: ^4.6.5
   shared_preferences: ^2.1.1
   flutter_svg: ^2.0.5
+  cloud_firestore: ^4.7.0
 
 dev_dependencies:
   flutter_test:
