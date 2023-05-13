@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_svg/svg.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,10 +20,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Login Page"),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 80),
@@ -34,14 +31,21 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Text(
                   "Chatify",
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   "Login now see what they are chatting",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 50,
+                ),
+                SvgPicture.asset(
+                  "assets/images/login.svg",
+                  height: 200,
+                ),
+                SizedBox(
+                  height: 50,
                 ),
                 TextFormField(
                   decoration: textInputDecoration.copyWith(
@@ -117,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                           fontSize: 15),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          nextPage(page: RegisterPage(), context: context);
+                          nextPageOnly(page: RegisterPage(), context: context);
                         }),
                 ]))
               ],

@@ -5,7 +5,8 @@ const textInputDecoration = InputDecoration(
     focusedBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Color(0xFFF50057), width: 2)),
     enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Color(0xFFF50057), width: 2)),
+      borderSide: BorderSide(color: Color(0xFFF50057), width: 2),
+    ),
     errorBorder: OutlineInputBorder(
         borderSide: BorderSide(color: Color(0xFFF50057), width: 2)));
 
