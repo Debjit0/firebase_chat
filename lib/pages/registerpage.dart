@@ -1,5 +1,7 @@
 import 'dart:ffi';
 
+import 'package:firebase_chat/helper/helperfunctions.dart';
+import 'package:firebase_chat/pages/homepage.dart';
 import 'package:firebase_chat/pages/loginpage.dart';
 import 'package:firebase_chat/service/authprovider.dart';
 import 'package:flutter/gestures.dart';
@@ -180,8 +182,13 @@ class _RegisterPageState extends State<RegisterPage> {
       });
       authProvider
           .registerUserWithEmailAndPassword(fullname, email, password)
-          .then((value) {
-        if (value == true) {/*sf*/} else {
+          .then((value) async {
+        if (value == true) {
+          await HelperFunctions.saveUserLoggedInStatus(true);
+          await HelperFunctions.saveUserEmail(email);
+          await HelperFunctions.saveUserName(fullname);
+          nextPageOnly(context: context, page: HomePage());
+        } else {
           showAlert(context, value);
           setState(() {
             _isLoading = false;
