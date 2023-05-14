@@ -11,8 +11,8 @@ class DatabaseProvider {
 
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection("groups");
-  //updating user data
-  Future updateUserData(String fullname, String email) async {
+  //save user data
+  Future saveUserData(String fullname, String email) async {
     final data = {
       "fullname": fullname,
       "email": email,
@@ -21,5 +21,12 @@ class DatabaseProvider {
       "uid": uid
     };
     await userCollection.doc(uid).set(data);
+  }
+
+  //get user data
+  Future getUserData(String email) async {
+    QuerySnapshot snapshot =
+        await userCollection.where("email", isEqualTo: email).get();
+    return snapshot;
   }
 }
