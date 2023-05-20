@@ -1,10 +1,12 @@
 import 'dart:ffi';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_chat/helper/helperfunctions.dart';
 import 'package:firebase_chat/pages/loginpage.dart';
 import 'package:firebase_chat/pages/profilepage.dart';
 import 'package:firebase_chat/pages/searchpage.dart';
 import 'package:firebase_chat/service/authprovider.dart';
+import 'package:firebase_chat/service/databaseprovider.dart';
 import 'package:firebase_chat/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,7 +22,9 @@ class _HomePageState extends State<HomePage> {
   AuthProvider authProvider = AuthProvider();
   String userName = "";
   String email = "";
-
+  Stream? groups;
+  bool _isLoading = false;
+  final uid = FirebaseAuth.instance.currentUser!.uid;
   @override
   void initState() {
     // TODO: implement initState
@@ -38,6 +42,12 @@ class _HomePageState extends State<HomePage> {
     await HelperFunctions.getUserEmailfromSF().then((value) {
       setState(() {
         email = value!;
+      });
+    });
+
+    await DatabaseProvider(uid: uid).getUserGroups().then((snapshot) {
+      setState(() {
+        groups = snapshot;
       });
     });
   }
@@ -99,9 +109,59 @@ class _HomePageState extends State<HomePage> {
           ],
         )),
       ),
+      body: groupList(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          popUpDialog(context);
+        },
+        elevation: 0,
+        backgroundColor: Theme.of(context).primaryColor,
+        child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  groupList() {
+    StreamBuilder(
+      stream: groups,
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data['groups'] != null) {
+            return Container();
+          } else {
+            return noGroupWidget();
+          }
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
+
+  popUpDialog(BuildContext) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              "Create Group",
+              textAlign: TextAlign.left,
+            ),
+            content: Column(
+              children: [],
+            ),
+          );
+        });
+  }
+
+  noGroupWidget() {
+    return Container(
+      child: Text("no group"),
     );
   }
 }
 
-//1:37
+//2:08
 //updates
