@@ -1,22 +1,19 @@
-import 'dart:ffi';
-
-import 'package:firebase_chat/helper/helperfunctions.dart';
-import 'package:firebase_chat/pages/loginpage.dart';
-import 'package:firebase_chat/pages/profilepage.dart';
-import 'package:firebase_chat/pages/searchpage.dart';
-import 'package:firebase_chat/service/authprovider.dart';
-import 'package:firebase_chat/widgets/widgets.dart';
+import 'package:firebase_chat/pages/homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+import '../helper/helperfunctions.dart';
+import '../service/authprovider.dart';
+import '../widgets/widgets.dart';
+import 'loginpage.dart';
+
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ProfilePageState extends State<ProfilePage> {
   AuthProvider authProvider = AuthProvider();
   String userName = "";
   String email = "";
@@ -47,15 +44,8 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
-        title: Text("Groups"),
+        title: Text("Profile"),
         centerTitle: true,
-        actions: [
-          IconButton(
-              onPressed: () {
-                nextPage(context: context, page: SearchPage());
-              },
-              icon: Icon(Icons.search_outlined))
-        ],
       ),
       drawer: SafeArea(
         child: Drawer(
@@ -75,9 +65,9 @@ class _HomePageState extends State<HomePage> {
               height: 50,
             ),
             ListTile(
-              onTap: () {},
-              selectedColor: Theme.of(context).primaryColor,
-              selected: true,
+              onTap: () {
+                nextPageOnly(context: context, page: HomePage());
+              },
               leading: Icon(Icons.group_outlined),
               title: Text("Groups"),
             ),
@@ -85,6 +75,8 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 nextPageOnly(context: context, page: ProfilePage());
               },
+              selectedColor: Theme.of(context).primaryColor,
+              selected: true,
               leading: Icon(Icons.account_circle_outlined),
               title: Text("Profile"),
             ),
@@ -99,9 +91,7 @@ class _HomePageState extends State<HomePage> {
           ],
         )),
       ),
+      body: Center(child: Text("Profile Page")),
     );
   }
 }
-
-//1:37
-//updates
