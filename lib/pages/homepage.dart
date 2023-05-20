@@ -7,6 +7,7 @@ import 'package:firebase_chat/pages/profilepage.dart';
 import 'package:firebase_chat/pages/searchpage.dart';
 import 'package:firebase_chat/service/authprovider.dart';
 import 'package:firebase_chat/service/databaseprovider.dart';
+import 'package:firebase_chat/widgets/grouptile.dart';
 import 'package:firebase_chat/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   String email = "";
   Stream? groups;
   bool _isLoading = false;
+  String groupName = "";
   final uid = FirebaseAuth.instance.currentUser!.uid;
   @override
   void initState() {
@@ -35,21 +37,32 @@ class _HomePageState extends State<HomePage> {
   gettingUserData() async {
     await HelperFunctions.getUserNamefromSF().then((value) {
       setState(() {
+        print("check");
         userName = value!;
       });
     });
 
     await HelperFunctions.getUserEmailfromSF().then((value) {
       setState(() {
+        print("check");
         email = value!;
       });
     });
 
     await DatabaseProvider(uid: uid).getUserGroups().then((snapshot) {
       setState(() {
+        print("check");
         groups = snapshot;
       });
     });
+  }
+
+  String getId(String res) {
+    return res.substring(0, res.indexOf("_"));
+  }
+
+  String getName(String res) {
+    return res.substring(res.indexOf("_") + 1);
   }
 
   @override
@@ -122,19 +135,32 @@ class _HomePageState extends State<HomePage> {
   }
 
   groupList() {
-    StreamBuilder(
+    return StreamBuilder(
       stream: groups,
       builder: (context, AsyncSnapshot snapshot) {
+        //fb check
         if (snapshot.hasData) {
+          //
           if (snapshot.data['groups'] != null) {
-            return Container();
+            if (snapshot.data['groups'].length != 0) {
+              print(snapshot.data['groups'].length);
+              return ListView.builder(
+                itemCount: snapshot.data['groups'].length,
+                itemBuilder: (context, index) {
+                  return GroupTitle(
+                      groupId: getId(snapshot.data['groups'][index]),
+                      groupName: getName(snapshot.data['groups'][index]),
+                      userName: snapshot.data['fullname']);
+                },
+              );
+            } else {
+              return noGroupWidget();
+            }
           } else {
             return noGroupWidget();
           }
         } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+          return CircularProgressIndicator();
         }
       },
     );
@@ -150,8 +176,65 @@ class _HomePageState extends State<HomePage> {
               textAlign: TextAlign.left,
             ),
             content: Column(
-              children: [],
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _isLoading == true
+                    ? Center(
+                        child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor),
+                      )
+                    : TextField(
+                        onChanged: (val) {
+                          setState(() {
+                            groupName = val;
+                          });
+                        },
+                        style: const TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius: BorderRadius.circular(20)),
+                            errorBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(color: Colors.red),
+                                borderRadius: BorderRadius.circular(20)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                                borderRadius: BorderRadius.circular(20))),
+                      ),
+              ],
             ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    "Cancel",
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  )),
+              TextButton(
+                  onPressed: () {
+                    if (groupName != "") {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      DatabaseProvider(uid: uid)
+                          .createGroup(userName, uid, groupName)
+                          .whenComplete(() {
+                        setState(() {
+                          _isLoading = false;
+                        });
+                        Navigator.pop(context);
+                      });
+                    }
+                  },
+                  child: Text(
+                    "Create",
+                    style: TextStyle(color: Theme.of(context).primaryColor),
+                  ))
+            ],
           );
         });
   }

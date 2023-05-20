@@ -34,4 +34,30 @@ class DatabaseProvider {
   getUserGroups() async {
     return userCollection.doc(uid).snapshots();
   }
+
+  //creating group and storing in fb
+  Future createGroup(String userName, String id, String groupName) async {
+    final data = {
+      "groupname": groupName,
+      "groupicon": "",
+      "admin": "${id}_$userName",
+      "members": [],
+      "groupid": "",
+      "recentmessage": "",
+      "recentmessagesender": ""
+    };
+
+    DocumentReference groupDocumentReference = await groupCollection.add(data);
+
+    await groupDocumentReference.update({
+      "members": FieldValue.arrayUnion(["${uid}_$userName"]),
+      "groupid": groupDocumentReference.id,
+    });
+
+    DocumentReference userDocumentReference = userCollection.doc(uid);
+    return await userDocumentReference.update({
+      "groups":
+          FieldValue.arrayUnion(["${groupDocumentReference.id}_$groupName"])
+    });
+  }
 }
