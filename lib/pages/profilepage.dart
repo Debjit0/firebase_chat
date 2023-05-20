@@ -43,6 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
         title: Text("Profile"),
         centerTitle: true,

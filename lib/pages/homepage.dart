@@ -37,21 +37,21 @@ class _HomePageState extends State<HomePage> {
   gettingUserData() async {
     await HelperFunctions.getUserNamefromSF().then((value) {
       setState(() {
-        print("check");
+        //print("check");
         userName = value!;
       });
     });
 
     await HelperFunctions.getUserEmailfromSF().then((value) {
       setState(() {
-        print("check");
+        //print("check");
         email = value!;
       });
     });
 
     await DatabaseProvider(uid: uid).getUserGroups().then((snapshot) {
       setState(() {
-        print("check");
+        //print("check");
         groups = snapshot;
       });
     });
@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
         title: Text("Groups"),
         centerTitle: true,
@@ -143,13 +144,13 @@ class _HomePageState extends State<HomePage> {
           //
           if (snapshot.data['groups'] != null) {
             if (snapshot.data['groups'].length != 0) {
-              print(snapshot.data['groups'].length);
               return ListView.builder(
                 itemCount: snapshot.data['groups'].length,
                 itemBuilder: (context, index) {
+                  int revIndex = snapshot.data['groups'].length - index - 1;
                   return GroupTitle(
-                      groupId: getId(snapshot.data['groups'][index]),
-                      groupName: getName(snapshot.data['groups'][index]),
+                      groupId: getId(snapshot.data['groups'][revIndex]),
+                      groupName: getName(snapshot.data['groups'][revIndex]),
                       userName: snapshot.data['fullname']);
                 },
               );
