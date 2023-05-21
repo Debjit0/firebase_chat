@@ -62,7 +62,7 @@ class DatabaseProvider {
   }
 
   //getting chats
-  getChat(String groupId) async {
+  Future getChats(String groupId) async {
     return groupCollection
         .doc(groupId)
         .collection("messages")
@@ -70,9 +70,14 @@ class DatabaseProvider {
         .snapshots();
   }
 
-  getAdmin(String groupId) async {
+  Future getGroupAdmin(String groupId) async {
     DocumentReference d = groupCollection.doc(groupId);
     DocumentSnapshot documentSnapshot = await d.get();
-    return documentSnapshot["admin"];
+    return documentSnapshot['admin'];
+  }
+
+  //getting group members
+  Future getGroupMembers(String groupId) async {
+    return groupCollection.doc(groupId).snapshots();
   }
 }
