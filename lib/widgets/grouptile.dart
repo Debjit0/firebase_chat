@@ -1,3 +1,5 @@
+import 'package:firebase_chat/pages/chatpage.dart';
+import 'package:firebase_chat/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class GroupTitle extends StatefulWidget {
@@ -19,7 +21,14 @@ class _GroupTitleState extends State<GroupTitle> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        nextPage(
+            context: context,
+            page: ChatPage(
+                groupId: widget.groupId,
+                groupName: widget.groupName,
+                userName: widget.userName));
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
         child: ListTile(
