@@ -80,4 +80,9 @@ class DatabaseProvider {
   Future getGroupMembers(String groupId) async {
     return groupCollection.doc(groupId).snapshots();
   }
+
+  //search by group name
+  Future searchByGroupName(String groupName) async {
+    return groupCollection.where("groupname", isEqualTo: groupName).get();
+  }
 }
