@@ -130,7 +130,7 @@ class _SearchPageState extends State<SearchPage> {
           );
   }
 
-  joinedOrNot(String groupId, String groupName, String UserName, String admin) {
+  groupTile(String userName, String groupId, String groupName, String admin) {
     DatabaseProvider(uid: uid).isUserJoined(groupName, groupId, userName).then(
       (value) {
         setState(() {
@@ -139,16 +139,35 @@ class _SearchPageState extends State<SearchPage> {
         });
       },
     );
-  }
-
-  groupTile(String userName, String groupId, String groupName, String admin) {
-    joinedOrNot(groupId, groupName, userName, admin);
 
     return Column(
       children: [
         Text(groupName),
         Text(admin),
-        isUserJoined ? Text("Joined") : Text("Not Joioned")
+        isUserJoined
+            ? Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.black,
+                  border: Border.all(color: Colors.white, width: 1),
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: const Text(
+                  "Joined",
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            : Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Theme.of(context).primaryColor,
+                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: const Text("Join Now",
+                    style: TextStyle(color: Colors.white)),
+              ),
       ],
     );
   }
