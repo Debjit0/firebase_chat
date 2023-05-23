@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -84,5 +87,23 @@ class DatabaseProvider {
   //search by group name
   Future searchByGroupName(String groupName) async {
     return groupCollection.where("groupname", isEqualTo: groupName).get();
+  }
+
+  //check if the user is joined n the group
+  Future<bool> isUserJoined(
+      String groupName, String groupId, String userName) async {
+    DocumentReference userDocumentReference = userCollection.doc(uid);
+    DocumentSnapshot documentSnapshot = await userDocumentReference.get();
+
+    List<dynamic> groups = await documentSnapshot['groups'];
+    //testing
+    //print("${groupId}_$groupName");
+    //print(groups[2]);
+
+    if (groups.contains("${groupId}_$groupName")) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

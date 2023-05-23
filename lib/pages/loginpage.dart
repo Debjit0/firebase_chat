@@ -135,19 +135,23 @@ class _LoginPageState extends State<LoginPage> {
                         height: 20,
                       ),
                       Text.rich(
-                          TextSpan(text: "Don't have an account? ", children: [
                         TextSpan(
-                            text: "Register Here",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                nextPageOnly(
-                                    page: RegisterPage(), context: context);
-                              }),
-                      ]))
+                          text: "Don't have an account? ",
+                          children: [
+                            TextSpan(
+                                text: "Register Here",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    nextPageOnly(
+                                        page: RegisterPage(), context: context);
+                                  }),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),

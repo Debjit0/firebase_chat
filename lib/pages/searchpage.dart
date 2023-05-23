@@ -20,6 +20,8 @@ class _SearchPageState extends State<SearchPage> {
   String userName = "";
   String userId = "";
   User? user;
+  bool isUserJoined = false;
+  final uid = FirebaseAuth.instance.currentUser!.uid;
   @override
   void initState() {
     // TODO: implement initState
@@ -128,9 +130,26 @@ class _SearchPageState extends State<SearchPage> {
           );
   }
 
+  joinedOrNot(String groupId, String groupName, String UserName, String admin) {
+    DatabaseProvider(uid: uid).isUserJoined(groupName, groupId, userName).then(
+      (value) {
+        setState(() {
+          isUserJoined = value;
+          //print(value);
+        });
+      },
+    );
+  }
+
   groupTile(String userName, String groupId, String groupName, String admin) {
+    joinedOrNot(groupId, groupName, userName, admin);
+
     return Column(
-      children: [Text(groupName), Text(admin)],
+      children: [
+        Text(groupName),
+        Text(admin),
+        isUserJoined ? Text("Joined") : Text("Not Joioned")
+      ],
     );
   }
 }
