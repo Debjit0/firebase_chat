@@ -146,7 +146,18 @@ class _SearchPageState extends State<SearchPage> {
         Text(admin),
         InkWell(
           onTap: () {
-            print(isUserJoined);
+            DatabaseProvider(uid: uid)
+                .toggleGroupJoin(groupId, groupName, userName);
+
+            if (isUserJoined) {
+              setState(() {
+                isUserJoined = !isUserJoined;
+              });
+            } else {
+              setState(() {
+                isUserJoined = !isUserJoined;
+              });
+            }
           },
           child: isUserJoined
               ? Container(

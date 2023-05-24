@@ -110,7 +110,7 @@ class DatabaseProvider {
   Future toggleGroupJoin(
       String groupId, String groupName, String userName) async {
     DocumentReference userDocumentReference = userCollection.doc(uid);
-    DocumentReference groupDocumentReference = groupCollection.doc(uid);
+    DocumentReference groupDocumentReference = groupCollection.doc(groupId);
 
     DocumentSnapshot documentSnapshot = await userDocumentReference.get();
     List<dynamic> groups = await documentSnapshot['groups'];
