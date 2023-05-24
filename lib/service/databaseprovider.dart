@@ -106,4 +106,36 @@ class DatabaseProvider {
       return false;
     }
   }
+
+  Future toggleGroupJoin(
+      String groupId, String groupName, String userName) async {
+    DocumentReference userDocumentReference = userCollection.doc(uid);
+    DocumentReference groupDocumentReference = groupCollection.doc(uid);
+
+    DocumentSnapshot documentSnapshot = await userDocumentReference.get();
+    List<dynamic> groups = await documentSnapshot['groups'];
+    if (groups.contains("${groupId}_$groupName")) {
+      await userDocumentReference.update(
+        {
+          "groups": FieldValue.arrayRemove(["${groupId}_$groupName"])
+        },
+      );
+      await groupDocumentReference.update(
+        {
+          "members": FieldValue.arrayRemove(["${uid}_$userName"])
+        },
+      );
+    } else {
+      await userDocumentReference.update(
+        {
+          "groups": FieldValue.arrayUnion(["${groupId}_$groupName"])
+        },
+      );
+      await groupDocumentReference.update(
+        {
+          "members": FieldValue.arrayUnion(["${uid}_$userName"])
+        },
+      );
+    }
+  }
 }

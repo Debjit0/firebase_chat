@@ -135,7 +135,7 @@ class _SearchPageState extends State<SearchPage> {
       (value) {
         setState(() {
           isUserJoined = value;
-          //print(value);
+          //print(!isUserJoined);
         });
       },
     );
@@ -144,30 +144,35 @@ class _SearchPageState extends State<SearchPage> {
       children: [
         Text(groupName),
         Text(admin),
-        isUserJoined
-            ? Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black,
-                  border: Border.all(color: Colors.white, width: 1),
+        InkWell(
+          onTap: () {
+            print(isUserJoined);
+          },
+          child: isUserJoined
+              ? Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black,
+                    border: Border.all(color: Colors.white, width: 1),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: const Text(
+                    "Joined",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
+              : Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: const Text("Join Now",
+                      style: TextStyle(color: Colors.white)),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: const Text(
-                  "Joined",
-                  style: TextStyle(color: Colors.white),
-                ),
-              )
-            : Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).primaryColor,
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: const Text("Join Now",
-                    style: TextStyle(color: Colors.white)),
-              ),
+        ),
       ],
     );
   }
