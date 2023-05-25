@@ -1,6 +1,10 @@
 import 'dart:ffi';
+import 'package:firebase_chat/pages/homepage.dart';
 
+import "../widgets/widgets.dart";
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_chat/service/databaseprovider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class GroupInfo extends StatefulWidget {
@@ -50,7 +54,16 @@ class _GroupInfoState extends State<GroupInfo> {
         elevation: 0,
         backgroundColor: Theme.of(context).primaryColor,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.exit_to_app_outlined))
+          IconButton(
+              onPressed: () {
+                DatabaseProvider(uid: FirebaseAuth.instance.currentUser!.uid)
+                    .toggleGroupJoin(widget.groupId, widget.groupName,
+                        getName(widget.adminName))
+                    .whenComplete(() {
+                  nextPage(page: HomePage(), context: context);
+                });
+              },
+              icon: Icon(Icons.exit_to_app_outlined))
         ],
       ),
       body: Container(
