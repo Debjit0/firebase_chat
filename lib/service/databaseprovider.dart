@@ -65,7 +65,8 @@ class DatabaseProvider {
   }
 
   //getting chats
-  Future getChats(String groupId) async {
+  getChats(String groupId) async {
+    //print(groupId);
     return groupCollection
         .doc(groupId)
         .collection("messages")
@@ -137,5 +138,15 @@ class DatabaseProvider {
         },
       );
     }
+  }
+
+  //send message
+  sendMessage(String groupId, Map<String, dynamic> chatMessageData) async {
+    groupCollection.doc(groupId).collection("messages").add(chatMessageData);
+    groupCollection.doc(groupId).update({
+      "recentmessage": chatMessageData['message'],
+      "recentmessagesender": chatMessageData['sender'],
+      "recentmessagetime": chatMessageData['time'].toString(),
+    });
   }
 }
