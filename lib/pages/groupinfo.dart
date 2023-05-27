@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'package:firebase_chat/pages/changegrouppic.dart';
 import 'package:firebase_chat/pages/homepage.dart';
 
 import "../widgets/widgets.dart";
@@ -70,6 +71,18 @@ class _GroupInfoState extends State<GroupInfo> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           children: [
+            Container(
+              child: TextButton(
+                child: Text("Change pic"),
+                onPressed: () {
+                  nextPage(
+                      context: context,
+                      page: ChangeGroupPic(
+                        groupId: widget.groupId,
+                      ));
+                },
+              ),
+            ),
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(

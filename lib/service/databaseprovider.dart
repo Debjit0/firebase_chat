@@ -1,9 +1,11 @@
 import 'dart:ffi';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class DatabaseProvider {
   final String? uid;
@@ -14,6 +16,8 @@ class DatabaseProvider {
 
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection("groups");
+
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   //save user data
   Future saveUserData(String fullname, String email) async {
     final data = {
@@ -36,6 +40,11 @@ class DatabaseProvider {
   //getting all the groups
   getUserGroups() async {
     return userCollection.doc(uid).snapshots();
+  }
+
+  //getting groupImage
+  getGroupImage(String groupId) async {
+    return groupCollection.doc(groupId).snapshots();
   }
 
   //creating group and storing in fb
@@ -148,5 +157,41 @@ class DatabaseProvider {
       "recentmessagesender": chatMessageData['sender'],
       "recentmessagetime": chatMessageData['time'].toString(),
     });
+  }
+
+  //update group icon
+  updateGroupIcon(File? groupImage, String groupId) async {
+    String imagePath = "";
+
+    try {
+      final imageName = groupImage!.path.split('/').last;
+
+      await _storage
+          .ref()
+          .child("$groupId/$imageName")
+          .putFile(groupImage)
+          .whenComplete(() async {
+        await _storage
+            .ref()
+            .child("$groupId/$imageName")
+            .getDownloadURL()
+            .then((value) {
+          imagePath = value;
+        });
+
+        final data = {"groupicon": imagePath};
+
+        await FirebaseFirestore.instance
+            .collection("groups")
+            .doc(groupId)
+            .update(data);
+      });
+    } on FirebaseException catch (e) {
+      print(e);
+    } on SocketException catch (_) {
+      print(e);
+    } catch (e) {
+      print(e);
+    }
   }
 }
