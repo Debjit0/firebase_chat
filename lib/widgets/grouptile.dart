@@ -23,16 +23,23 @@ class GroupTitle extends StatefulWidget {
 
 class _GroupTitleState extends State<GroupTitle> {
   String groupIcon = "";
-  getGroupIcon() {
-    Stream ds = FirebaseFirestore.instance
-        .collection("groups")
-        .doc(widget.groupId)
-        .snapshots();
+  getGroupIcon() async {
+    var collection = FirebaseFirestore.instance.collection('groups');
+    var docSnapshot = await collection.doc(widget.groupId).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      setState(() {
+        groupIcon = data?['groupicon'];
+      });
+      print(groupIcon);
+    }
   }
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
+    getGroupIcon();
   }
 
   @override
@@ -61,8 +68,17 @@ class _GroupTitleState extends State<GroupTitle> {
                   ),
                 )
               : CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(groupIcon),
+                  radius: (30),
+                  backgroundColor: Colors.white,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.network(
+                      groupIcon,
+                      fit: BoxFit.cover,
+                      height: 50,
+                      width: 50,
+                    ),
+                  ),
                 ),
           title: Text(
             widget.groupName,

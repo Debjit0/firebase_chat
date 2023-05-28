@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   int revIndex = snapshot.data['groups'].length - index - 1;
                   return GroupTitle(
-                      groupIcon: snapshot.data['group'][revIndex],
+                      //groupIcon: snapshot.data['groups'][revIndex],
                       groupId: getId(snapshot.data['groups'][revIndex]),
                       groupName: getName(snapshot.data['groups'][revIndex]),
                       userName: snapshot.data['fullname']);

@@ -168,12 +168,14 @@ class DatabaseProvider {
 
       await _storage
           .ref()
-          .child("$groupId/$imageName")
+          .child(groupId)
+          .child(imageName)
           .putFile(groupImage)
           .whenComplete(() async {
         await _storage
             .ref()
-            .child("$groupId/$imageName")
+            .child(groupId)
+            .child(imageName)
             .getDownloadURL()
             .then((value) {
           imagePath = value;
