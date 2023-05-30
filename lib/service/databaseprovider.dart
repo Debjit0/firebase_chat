@@ -24,6 +24,7 @@ class DatabaseProvider {
       "fullname": fullname,
       "email": email,
       "groups": [],
+      "perschats": [],
       "profilepic": "",
       "uid": uid
     };
@@ -95,8 +96,13 @@ class DatabaseProvider {
   }
 
   //search by group name
-  Future searchByGroupName(String groupName) async {
-    return groupCollection.where("groupname", isEqualTo: groupName).get();
+  Future searchByGroupName(String input) async {
+    return groupCollection.where("groupname", isEqualTo: input).get();
+  }
+
+  //search users by email
+  Future searchByEmail(String input) async {
+    return userCollection.where("email", isEqualTo: input).get();
   }
 
   //check if the user is joined n the group
@@ -116,6 +122,7 @@ class DatabaseProvider {
       return false;
     }
   }
+  //pers chat join
 
   Future toggleGroupJoin(
       String groupId, String groupName, String userName) async {

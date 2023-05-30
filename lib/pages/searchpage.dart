@@ -15,7 +15,8 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
   bool isLoading = false;
-  QuerySnapshot? searchSnapshot;
+  QuerySnapshot? groupsearchSnapshot;
+  QuerySnapshot? emailsearchSnapshot;
   bool hasUserSearched = false;
   String userName = "";
   String userId = "";
@@ -62,7 +63,7 @@ class _SearchPageState extends State<SearchPage> {
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                         border: InputBorder.none,
-                        hintText: "Search groups....",
+                        hintText: "Search groups or email",
                         hintStyle:
                             TextStyle(color: Colors.white, fontSize: 16)),
                   ),
@@ -82,7 +83,7 @@ class _SearchPageState extends State<SearchPage> {
                       color: Colors.white,
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -100,30 +101,52 @@ class _SearchPageState extends State<SearchPage> {
   initiateSearchMethod() {
     if (searchController.text.isNotEmpty) {
       isLoading = true;
-      DatabaseProvider()
-          .searchByGroupName(searchController.text)
-          .then((snapshot) {
-        setState(() {
-          searchSnapshot = snapshot;
-          isLoading = false;
-          hasUserSearched = true;
-        });
-      });
+      DatabaseProvider().searchByGroupName(searchController.text).then(
+        (snapshot) {
+          setState(() {
+            groupsearchSnapshot = snapshot;
+            isLoading = false;
+            hasUserSearched = true;
+          });
+        },
+      );
+
+      DatabaseProvider().searchByEmail(searchController.text).then(
+        (snapshot) {
+          setState(() {
+            emailsearchSnapshot = snapshot;
+            isLoading = false;
+            hasUserSearched = true;
+          });
+        },
+      );
     }
   }
 
   groupList() {
     return hasUserSearched
-        ? ListView.builder(
-            shrinkWrap: true,
-            itemCount: searchSnapshot!.docs.length,
-            itemBuilder: (context, index) {
-              return groupTile(
-                  userName,
-                  searchSnapshot!.docs[index]["groupid"],
-                  searchSnapshot!.docs[index]["groupname"],
-                  searchSnapshot!.docs[index]["admin"]);
-            },
+        ? Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: groupsearchSnapshot!.docs.length,
+                itemBuilder: (context, index) {
+                  return groupTile(
+                      userName,
+                      groupsearchSnapshot!.docs[index]["groupid"],
+                      groupsearchSnapshot!.docs[index]["groupname"],
+                      groupsearchSnapshot!.docs[index]["admin"]);
+                },
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: emailsearchSnapshot!.docs.length,
+                itemBuilder: (context, index) {
+                  return individualUserTile(
+                      emailsearchSnapshot!.docs[index]["email"]);
+                },
+              ),
+            ],
           )
         : Container(
             child: Text("No Search"),
@@ -183,6 +206,26 @@ class _SearchPageState extends State<SearchPage> {
                   child: const Text("Join Now",
                       style: TextStyle(color: Colors.white)),
                 ),
+        ),
+      ],
+    );
+  }
+
+  individualUserTile(String email) {
+    return Column(
+      children: [
+        Text(email),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.black,
+            border: Border.all(color: Colors.white, width: 1),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: const Text(
+            "chat",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ],
     );

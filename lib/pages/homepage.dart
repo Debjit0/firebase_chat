@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_chat/helper/helperfunctions.dart';
 import 'package:firebase_chat/pages/loginpage.dart';
+import 'package:firebase_chat/pages/personalchat.dart';
 import 'package:firebase_chat/pages/profilepage.dart';
 import 'package:firebase_chat/pages/searchpage.dart';
 import 'package:firebase_chat/service/authprovider.dart';
@@ -104,6 +105,13 @@ class _HomePageState extends State<HomePage> {
               selected: true,
               leading: Icon(Icons.group_outlined),
               title: Text("Groups"),
+            ),
+            ListTile(
+              onTap: () {
+                nextPage(context: context, page: PersonalChat());
+              },
+              leading: Icon(Icons.message_outlined),
+              title: Text("Chats"),
             ),
             ListTile(
               onTap: () {
