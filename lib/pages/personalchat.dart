@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_chat/pages/homepage.dart';
 import 'package:firebase_chat/pages/profilepage.dart';
 import 'package:firebase_chat/pages/searchpage.dart';
+import 'package:firebase_chat/widgets/chattile.dart';
 import 'package:flutter/material.dart';
 
 import '../helper/helperfunctions.dart';
@@ -46,12 +48,14 @@ class _PersonalChatState extends State<PersonalChat> {
       });
     });
 
-    await DatabaseProvider(uid: uid).getUserGroups().then((snapshot) {
-      setState(() {
-        //print("check");
-        chats = snapshot;
-      });
-    });
+    await DatabaseProvider(uid: uid).getUserChats().then(
+      (snapshots) {
+        setState(() {
+          chats = snapshots;
+          print(chats);
+        });
+      },
+    );
   }
 
   @override
@@ -88,7 +92,9 @@ class _PersonalChatState extends State<PersonalChat> {
               height: 50,
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                nextPageOnly(page: HomePage(), context: context);
+              },
               leading: Icon(Icons.group_outlined),
               title: Text("Groups"),
             ),
@@ -119,7 +125,43 @@ class _PersonalChatState extends State<PersonalChat> {
           ],
         )),
       ),
+      body: chatList(),
     );
+  }
+
+  chatList() {
+    return StreamBuilder(
+      stream: chats,
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data["perschats"] != null) {
+            if (snapshot.data["perschats"].length != 0) {
+              return ListView.builder(
+                itemCount: snapshot.data['perschats'].length,
+                itemBuilder: (context, index) {
+                  int revIndex = snapshot.data['perschats'].length - index - 1;
+                  return ChatTile(
+                    chatName: snapshot.data["perschats"][revIndex],
+                    chatId: "awdawd",
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: Text("No Chats"),
+              );
+            }
+          } else {
+            return Center(
+              child: Text("No Data"),
+            );
+          }
+        } else {
+          return Text("No Data");
+        }
+      },
+    );
+    //return Text("test");
   }
 }
 

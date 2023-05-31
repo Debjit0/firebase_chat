@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 class DatabaseProvider {
   final String? uid;
@@ -36,6 +37,11 @@ class DatabaseProvider {
     QuerySnapshot snapshot =
         await userCollection.where("email", isEqualTo: email).get();
     return snapshot;
+  }
+
+  //getting all user chats
+  getUserChats() async {
+    return userCollection.doc(uid).snapshots();
   }
 
   //getting all the groups
