@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_chat/helper/helperfunctions.dart';
+import 'package:firebase_chat/pages/personalchat.dart';
 import 'package:firebase_chat/service/databaseprovider.dart';
 import 'package:firebase_chat/widgets/grouptile.dart';
+import 'package:firebase_chat/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatefulWidget {
@@ -215,16 +217,25 @@ class _SearchPageState extends State<SearchPage> {
     return Column(
       children: [
         Text(email),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.black,
-            border: Border.all(color: Colors.white, width: 1),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: const Text(
-            "chat",
-            style: TextStyle(color: Colors.white),
+        InkWell(
+          onTap: () {
+            DatabaseProvider(uid: uid)
+                .createChat(userName, uid, email)
+                .whenComplete(() {
+              nextPageOnly(page: PersonalChat(), context: context);
+            });
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.black,
+              border: Border.all(color: Colors.white, width: 1),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: const Text(
+              "chat",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ),
       ],

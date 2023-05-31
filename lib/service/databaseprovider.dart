@@ -18,6 +18,9 @@ class DatabaseProvider {
   final CollectionReference groupCollection =
       FirebaseFirestore.instance.collection("groups");
 
+  final CollectionReference perschatCollection =
+      FirebaseFirestore.instance.collection("perschat");
+
   final FirebaseStorage _storage = FirebaseStorage.instance;
   //save user data
   Future saveUserData(String fullname, String email) async {
@@ -52,6 +55,29 @@ class DatabaseProvider {
   //getting groupImage
   getGroupImage(String groupId) async {
     return groupCollection.doc(groupId).snapshots();
+  }
+
+  //creating chat and storing in fb
+  Future createChat(String userName, String uid, String email) async {
+    print(email);
+    final data = {
+      "chatid": "",
+      "recentmessage": "",
+      "recentmessagesender": "",
+    };
+
+    DocumentReference perschatDocumentReference =
+        await FirebaseFirestore.instance.collection("perschat").add(data);
+
+    await perschatDocumentReference
+        .update({"chatid": "${perschatDocumentReference.id}_$userName"});
+
+    DocumentReference userDocumentReference = userCollection.doc(uid);
+
+    await userDocumentReference.update({
+      "perschats":
+          FieldValue.arrayUnion(["${perschatDocumentReference.id}_$userName"])
+    });
   }
 
   //creating group and storing in fb
@@ -210,3 +236,6 @@ class DatabaseProvider {
     }
   }
 }
+
+
+//modify reciever pers chat
